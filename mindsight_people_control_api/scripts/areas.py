@@ -1,6 +1,10 @@
-from mindsight_people_control_api.helpers.base_requests import BaseRequests, ApiPaginationResponse
-from mindsight_people_control_api.settings import API_ENDPOINT_AREAS, PAGE_SIZE
 from datetime import date
+
+from mindsight_people_control_api.helpers.base_requests import (
+    ApiPaginationResponse,
+    BaseRequests,
+)
+from mindsight_people_control_api.settings import API_ENDPOINT_AREAS, PAGE_SIZE
 
 
 class Areas:
@@ -49,11 +53,8 @@ class Areas:
             "search": search,
             "page_size": self.PAGE_SIZE,
         }
-        return self.base_requests._get(
-            path=path,
-            parameters=parameters
-        )
-    
+        return self.base_requests._get(path=path, parameters=parameters)
+
     def get_retrieve_area(
         self,
         id: int,
@@ -121,11 +122,8 @@ class Areas:
             "parent_area": parent_area,
         }
 
-        return self.base_requests._post(
-            path=path,
-            data=data
-        )
-    
+        return self.base_requests._post(path=path, data=data)
+
     def patch_edit_area(
         self,
         id: int,
@@ -148,20 +146,15 @@ class Areas:
         data = {
             "code": code,
             "name": name,
-            "start_date": start_date.strftime(self.__date_format) if start_date else None,
+            "start_date": start_date.strftime(self.__date_format)
+            if start_date
+            else None,
             "end_date": end_date.strftime(self.__date_format) if end_date else None,
         }
-        return self.base_requests._patch(
-            path=path,
-            data=data
-        )
-    
+        return self.base_requests._patch(path=path, data=data)
+
     def patch_edit_parent_area(
-        self,
-        id: int,
-        parent_id: int,
-        start_date: date,
-        end_date: date = None
+        self, id: int, parent_id: int, start_date: date, end_date: date = None
     ) -> dict:
         """Edit parent area
         Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas/operation/editParentArea
@@ -175,10 +168,9 @@ class Areas:
         path = f"/{id}/edit_parent"
         data = {
             "parent_id": parent_id,
-            "start_date": start_date.strftime(self.__date_format) if start_date else None,
+            "start_date": start_date.strftime(self.__date_format)
+            if start_date
+            else None,
             "end_date": end_date.strftime(self.__date_format) if start_date else None,
         }
-        return self.base_requests._patch(
-            path=path,
-            data=data
-        )
+        return self.base_requests._patch(path=path, data=data)

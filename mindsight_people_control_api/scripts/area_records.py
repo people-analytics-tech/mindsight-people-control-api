@@ -1,4 +1,7 @@
-from mindsight_people_control_api.helpers.base_requests import BaseRequests, ApiPaginationResponse
+from mindsight_people_control_api.helpers.base_requests import (
+    ApiPaginationResponse,
+    BaseRequests,
+)
 from mindsight_people_control_api.settings import API_ENDPOINT_AREAS_RECORDS, PAGE_SIZE
 
 
@@ -43,11 +46,8 @@ class AreaRecords:
             "search": search,
             "page_size": self.PAGE_SIZE,
         }
-        return self.base_requests._get(
-            path=path,
-            parameters=parameters
-        )
-    
+        return self.base_requests._get(path=path, parameters=parameters)
+
     def get_retrieve_area_record(
         self,
         id: int,

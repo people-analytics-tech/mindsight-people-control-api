@@ -1,6 +1,5 @@
 from decouple import config
 
-
 # API Constants
 API_TOKEN = config("MINDSIGHT_API_TOKEN")
 API_BASE_URL = config("MINDSIGHT_API_BASE_URL")

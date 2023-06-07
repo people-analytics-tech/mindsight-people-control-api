@@ -1,6 +1,8 @@
+from typing import Any, Literal
+
 import requests
-from mindsight_people_control_api.settings import API_TOKEN, API_BASE_URL, API_VERSION
-from typing import Literal, Any
+
+from mindsight_people_control_api.settings import API_BASE_URL, API_TOKEN, API_VERSION
 
 
 class ApiPaginationResponse:
@@ -45,7 +47,7 @@ class BaseRequests:
     def __authorization_header(self) -> dict:
         return {
             "Authorization": f"Token {self.__TOKEN}",
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
         }
 
     @staticmethod
@@ -120,7 +122,7 @@ class BaseRequests:
 
             if (type(response) is not list) & (response is not None):
                 response_json = response.json()
-            
+
             if response_json.get("count") and response_json.get("next"):
                 return ApiPaginationResponse(**response_json, headers=self.__headers)
 
