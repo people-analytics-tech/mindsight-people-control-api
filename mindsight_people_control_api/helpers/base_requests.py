@@ -2,7 +2,9 @@ from typing import Any, Literal
 
 import requests
 
-from mindsight_people_control_api.settings import API_BASE_URL, API_TOKEN, API_VERSION
+from mindsight_people_control_api.helpers.exceptions import BadRequestException
+from mindsight_people_control_api.settings import API_TOKEN
+from mindsight_people_control_api.utils.aux_functions import generate_url
 
 
 class ApiPaginationResponse:
@@ -39,8 +41,6 @@ class ApiPaginationResponse:
 class BaseRequests:
     def __init__(self):
         self.__TOKEN = API_TOKEN
-        self.BASE_URL = API_BASE_URL
-        self.API_VERSION = f"/{API_VERSION}"
         self.BASE_PATH = "/"
         self.__headers = None
 
@@ -59,6 +59,22 @@ class BaseRequests:
 
         return result
 
+    def __check_response(self, response: requests.Response):
+        content_text = response.text
+        try:
+            response.raise_for_status()
+
+        except requests.HTTPError:
+
+            if response.status_code == 400:
+                raise BadRequestException(message=content_text)
+
+            else:
+                raise response.raise_for_status()
+
+        except Exception as e:
+            raise e
+
     def __request_helper(
         self,
         path: str,
@@ -66,72 +82,73 @@ class BaseRequests:
         headers: dict = None,
         parameters: dict = None,
         data: Any = None,
+        json: Any = None,
     ):
         if not headers:
             headers = {}
 
-        request_url = f"{self.BASE_URL}{self.API_VERSION}{self.BASE_PATH}{path}/"
+        request_url = generate_url(base_path=self.BASE_PATH, path=path)
         self.__headers = {**self.__authorization_header(), **headers}
 
         response = None
         method = method.lower()
 
-        try:
-            if method == "get":
-                response = requests.get(
-                    url=request_url,
-                    headers=self.__headers,
-                    params=parameters,
-                    data=data,
-                )
+        if method == "get":
+            response = requests.get(
+                url=request_url,
+                headers=self.__headers,
+                params=parameters,
+                data=data,
+            )
 
-            elif method == "post":
-                response = requests.post(
-                    url=request_url,
-                    headers=self.__headers,
-                    params=parameters,
-                    data=data,
-                )
+        elif method == "post":
+            response = requests.post(
+                url=request_url,
+                headers=self.__headers,
+                params=parameters,
+                data=data,
+                json=json,
+            )
 
-            elif method == "put":
-                response = requests.put(
-                    url=request_url,
-                    headers=self.__headers,
-                    params=parameters,
-                    data=data,
-                )
+        elif method == "put":
+            response = requests.put(
+                url=request_url,
+                headers=self.__headers,
+                params=parameters,
+                data=data,
+                json=json,
+            )
 
-            elif method == "patch":
-                response = requests.patch(
-                    url=request_url,
-                    headers=self.__headers,
-                    params=parameters,
-                    data=data,
-                )
+        elif method == "patch":
+            response = requests.patch(
+                url=request_url,
+                headers=self.__headers,
+                params=parameters,
+                data=data,
+                json=json,
+            )
 
-            elif method == "delete":
-                response = requests.delete(
-                    url=request_url,
-                    headers=self.__headers,
-                    params=parameters,
-                    data=data,
-                )
+        elif method == "delete":
+            response = requests.delete(
+                url=request_url,
+                headers=self.__headers,
+                params=parameters,
+                data=data,
+                json=json,
+            )
 
-            # Check response
-            response.raise_for_status()
+        # Check response
+        self.__check_response(response)
 
-            if (type(response) is not list) & (response is not None):
-                response_json = response.json()
+        if (type(response) is not list) & (response is not None):
+            response_json = response.json()
 
-            if response_json.get("count") and response_json.get("next"):
-                return ApiPaginationResponse(**response_json, headers=self.__headers)
+        if response_json.get("count") and response_json.get("next"):
+            return ApiPaginationResponse(**response_json, headers=self.__headers)
 
-            return response_json
+        return response_json
 
-        except Exception as e:
-            return Exception(f"API Request Error: {e}")
-
-    def _get(
+    def get(
         self,
         path: str,
         headers: dict = None,
@@ -141,7 +158,24 @@ class BaseRequests:
             path=path, method="get", headers=headers, parameters=parameters
         )
 
-    def _post(
+    def post(
+        self,
+        path: str,
+        headers: dict = None,
+        parameters: dict = None,
+        data: Any = None,
+        json: Any = None,
+    ) -> Any:
+        return self.__request_helper(
+            path=path,
+            method="post",
+            headers=headers,
+            parameters=parameters,
+            data=data,
+            json=json,
+        )
+
+    def put(
         self,
         path: str,
         headers: dict = None,
@@ -149,21 +183,14 @@ class BaseRequests:
         data: Any = None,
     ):
         return self.__request_helper(
-            path=path, method="post", headers=headers, parameters=parameters, data=data
+            path=path,
+            method="put",
+            headers=headers,
+            parameters=parameters,
+            data=data,
         )
 
-    def _put(
-        self,
-        path: str,
-        headers: dict = None,
-        parameters: dict = None,
-        data: Any = None,
-    ):
-        return self.__request_helper(
-            path=path, method="put", headers=headers, parameters=parameters, data=data
-        )
-
-    def _patch(
+    def patch(
         self,
         path: str,
         headers: dict = None,
@@ -178,7 +205,7 @@ class BaseRequests:
             data=self.__get_not_none_data_values(data),
         )
 
-    def _delete(
+    def delete(
         self,
         path: str,
         headers: dict = None,

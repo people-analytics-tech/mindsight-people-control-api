@@ -4,7 +4,11 @@ from mindsight_people_control_api.helpers.base_requests import (
     ApiPaginationResponse,
     BaseRequests,
 )
-from mindsight_people_control_api.settings import API_ENDPOINT_AREAS, PAGE_SIZE
+from mindsight_people_control_api.settings import (
+    API_ENDPOINT_AREAS,
+    PAGE_SIZE,
+    date_format,
+)
 
 
 class Areas:
@@ -13,7 +17,6 @@ class Areas:
     def __init__(self) -> None:
         self.base_requests.BASE_PATH = API_ENDPOINT_AREAS
         self.PAGE_SIZE = PAGE_SIZE
-        self.__date_format = "%Y-%m-%d"
 
     def get_list_areas(
         self,
@@ -53,7 +56,7 @@ class Areas:
             "search": search,
             "page_size": self.PAGE_SIZE,
         }
-        return self.base_requests._get(path=path, parameters=parameters)
+        return self.base_requests.get(path=path, parameters=parameters)
 
     def get_retrieve_area(
         self,
@@ -93,7 +96,7 @@ class Areas:
             "active": active,
             "search": search,
         }
-        return self.base_requests._get(
+        return self.base_requests.get(
             path=path,
             parameters=parameters,
         )
@@ -118,11 +121,11 @@ class Areas:
         data = {
             "code": code,
             "name": name,
-            "start_date": start_date.strftime(self.__date_format),
+            "start_date": start_date.strftime(date_format),
             "parent_area": parent_area,
         }
 
-        return self.base_requests._post(path=path, data=data)
+        return self.base_requests.post(path=path, data=data)
 
     def patch_edit_area(
         self,
@@ -146,12 +149,10 @@ class Areas:
         data = {
             "code": code,
             "name": name,
-            "start_date": start_date.strftime(self.__date_format)
-            if start_date
-            else None,
-            "end_date": end_date.strftime(self.__date_format) if end_date else None,
+            "start_date": start_date.strftime(date_format) if start_date else None,
+            "end_date": end_date.strftime(date_format) if end_date else None,
         }
-        return self.base_requests._patch(path=path, data=data)
+        return self.base_requests.patch(path=path, data=data)
 
     def patch_edit_parent_area(
         self, id: int, parent_id: int, start_date: date, end_date: date = None
@@ -168,9 +169,7 @@ class Areas:
         path = f"/{id}/edit_parent"
         data = {
             "parent_id": parent_id,
-            "start_date": start_date.strftime(self.__date_format)
-            if start_date
-            else None,
-            "end_date": end_date.strftime(self.__date_format) if start_date else None,
+            "start_date": start_date.strftime(date_format) if start_date else None,
+            "end_date": end_date.strftime(date_format) if start_date else None,
         }
-        return self.base_requests._patch(path=path, data=data)
+        return self.base_requests.patch(path=path, data=data)

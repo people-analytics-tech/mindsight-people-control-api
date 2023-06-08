@@ -46,7 +46,7 @@ class AreaRecords:
             "search": search,
             "page_size": self.PAGE_SIZE,
         }
-        return self.base_requests._get(path=path, parameters=parameters)
+        return self.base_requests.get(path=path, parameters=parameters)
 
     def get_retrieve_area_record(
         self,
@@ -83,7 +83,7 @@ class AreaRecords:
             "modified__lt": modified__lt,
             "search": search,
         }
-        return self.base_requests._get(
+        return self.base_requests.get(
             path=path,
             parameters=parameters,
         )
