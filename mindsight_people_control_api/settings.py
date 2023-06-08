@@ -1,3 +1,5 @@
+"""This module define project configurations variables"""
+
 from decouple import config
 
 # API Constants
@@ -6,7 +8,8 @@ API_BASE_URL = config("MINDSIGHT_API_BASE_URL")
 API_VERSION = "v1"
 
 # Request config
-PAGE_SIZE = 1000
+PAGE_SIZE: int = 1000
+TIMEOUT: int = 600  # Default set to 600 seconds (10 minutes)
 
 # Date formats
 DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"

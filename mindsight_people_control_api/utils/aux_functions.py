@@ -1,3 +1,5 @@
+"""This module provide aux functions to distinct proposes"""
+
 from mindsight_people_control_api.settings import API_BASE_URL, API_VERSION
 
 
