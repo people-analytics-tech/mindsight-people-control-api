@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mindsight-people-control-api"
-version = "0.1.0"
+version = "0.1.1"
 description = ""
 authors = ["Diogo56 <diogo.amorim2001@gmail.com>"]
 readme = "README.md"
