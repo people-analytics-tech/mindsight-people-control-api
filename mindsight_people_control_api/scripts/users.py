@@ -1,3 +1,5 @@
+"""This module provide methods to work with users entity"""
+
 from datetime import datetime
 
 from mindsight_people_control_api.helpers.base_requests import (
@@ -12,18 +14,23 @@ from mindsight_people_control_api.settings import (
 
 
 class Users:
+    """This class abstract the users endpoint methods
+    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users
+    """
+
     base_requests = BaseRequests()
 
     def __init__(self) -> None:
-        self.base_requests.BASE_PATH = API_ENDPOINT_USERS
-        self.PAGE_SIZE = PAGE_SIZE
+        self.base_requests.base_path = API_ENDPOINT_USERS
+        self.page_size = PAGE_SIZE
 
     def get_list_users(
         self,
         search: str = None,
     ) -> ApiPaginationResponse:
         """Get areas data
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/listUsers
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/listUsers
 
         Args:
             search: A search term.
@@ -32,23 +39,24 @@ class Users:
         path = ""
         parameters = {
             "search": search,
-            "page_size": self.PAGE_SIZE,
+            "page_size": self.page_size,
         }
         return self.base_requests.get(path=path, parameters=parameters)
 
     def get_retrieve_user(
         self,
-        id: int,
+        _id: int,
         search: str = None,
     ) -> dict:
         """Get retrieve user
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/retrieveUser
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/retrieveUser
 
         Args:
-            id (int, Mandatory): Id of user to retrieve
+            _id (int, Mandatory): Id of user to retrieve
             search (str, Optional): search
         """
-        path = f"/{id}"
+        path = f"/{_id}"
 
         parameters = {
             "search": search,
@@ -71,10 +79,12 @@ class Users:
         date_joined: datetime = datetime.now(),
     ):
         """Create new area
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/createUser
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/createUser
 
         Args:
-            username (str, Mandatory): Username with 254 characters or fewer. Letters, digits and @/./+/-/_ only
+            username (str, Mandatory): Username with 254 characters or fewer.
+                Letters, digits and @/./+/-/_ only
             email (str, Optional): User email with 254 characters or fewer
             first_name (str, Optional): User first name with 100 characters or fewer
             last_name (str, Optional): User last name with 150 characters or fewer
@@ -103,7 +113,7 @@ class Users:
 
     def patch_update_user(
         self,
-        id: int,
+        _id: int,
         username: str,
         email: str = None,
         first_name: str = None,
@@ -115,11 +125,13 @@ class Users:
         date_joined: datetime = None,
     ) -> dict:
         """Edit partial user register
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/partialUpdateUser
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/partialUpdateUser
 
         Args:
-            id (int, Mandatory): Area id
-            username (str, Mandatory): Username with 254 characters or fewer. Letters, digits and @/./+/-/_ only
+            _id (int, Mandatory): Area id
+            username (str, Mandatory): Username with 254 characters or fewer.
+                Letters, digits and @/./+/-/_ only
             email (str, Optional): User email with 254 characters or fewer
             first_name (str, Optional): User first name with 100 characters or fewer
             last_name (str, Optional): User last name with 150 characters or fewer
@@ -129,7 +141,7 @@ class Users:
             last_login (datetime, Optional): Datetime of last login
             date_joined (datetime, Optional): Datetime of user joined
         """
-        path = f"/{id}"
+        path = f"/{_id}"
         data = {
             "username": username,
             "email": email,
@@ -147,7 +159,7 @@ class Users:
 
     def put_full_update_user(
         self,
-        id: int,
+        _id: int,
         username: str,
         email: str = None,
         first_name: str = None,
@@ -159,11 +171,13 @@ class Users:
         date_joined: datetime = None,
     ) -> dict:
         """Edit full user register
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/updateUser
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/updateUser
 
         Args:
-            id (int, Mandatory): Area id
-            username (str, Mandatory): Username with 254 characters or fewer. Letters, digits and @/./+/-/_ only
+            _id (int, Mandatory): Area id
+            username (str, Mandatory): Username with 254 characters or fewer.
+                Letters, digits and @/./+/-/_ only
             email (str, Optional): User email with 254 characters or fewer
             first_name (str, Optional): User first name with 100 characters or fewer
             last_name (str, Optional): User last name with 150 characters or fewer
@@ -173,7 +187,7 @@ class Users:
             last_login (datetime, Optional): Datetime of last login
             date_joined (datetime, Optional): Datetime of user joined
         """
-        path = f"/{id}"
+        path = f"/{_id}"
         data = {
             "username": username,
             "email": email,
@@ -189,8 +203,16 @@ class Users:
         }
         return self.base_requests.put(path=path, data=data)
 
-    def delete_destroy_user(self, id: int, search: str = None):
-        path = f"/{id}"
+    def delete_destroy_user(self, _id: int, search: str = None):
+        """Delete user
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users/operation/destroyUser
+
+        Args:
+            _id (int, Mandatory): User id
+            search (str, Optional): Search term
+        """
+        path = f"/{_id}"
 
         parameters = {
             "search": search,

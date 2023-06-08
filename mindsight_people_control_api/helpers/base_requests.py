@@ -1,28 +1,39 @@
+"""This module provide a base to use requests for api"""
+
 from typing import Any, Literal
 
 import requests
 
 from mindsight_people_control_api.helpers.exceptions import BadRequestException
-from mindsight_people_control_api.settings import API_TOKEN
+from mindsight_people_control_api.settings import API_TOKEN, TIMEOUT
 from mindsight_people_control_api.utils.aux_functions import generate_url
 
 
 class ApiPaginationResponse:
-    count: int
-    next: str
-    previous: str
+    """Class to work with paginated responses"""
+
     results: list = []
 
-    def __init__(self, **kwargs) -> None:
-        self.count = kwargs["count"]
-        self.next = kwargs["next"]
-        self.previous = kwargs["previous"]
-        self.results.extend(kwargs["results"])
-        self.__headers = kwargs.get("headers")
+    def __init__(
+        self,
+        count: int,
+        previous: str = None,
+        results: list = None,
+        headers: dict = None,
+        **kwargs,
+    ) -> None:
+        self.count = count
+        self.next = kwargs.get("next")
+        self.previous = previous
+        self.results.extend(results if results else [])
+        self.__headers = headers
 
     def get_all(self):
+        """Get all pages of data"""
         if self.next:
-            response = requests.get(url=self.next, headers=self.__headers)
+            response = requests.get(
+                url=self.next, headers=self.__headers, timeout=TIMEOUT
+            )
 
             response.raise_for_status()
             response_data = response.json()
@@ -39,14 +50,16 @@ class ApiPaginationResponse:
 
 
 class BaseRequests:
+    """Aux class to communicate with mindsight api"""
+
     def __init__(self):
-        self.__TOKEN = API_TOKEN
-        self.BASE_PATH = "/"
+        self.__token = API_TOKEN
         self.__headers = None
+        self.base_path = "/"
 
     def __authorization_header(self) -> dict:
         return {
-            "Authorization": f"Token {self.__TOKEN}",
+            "Authorization": f"Token {self.__token}",
             "Content-Type": "application/json",
         }
 
@@ -64,16 +77,15 @@ class BaseRequests:
         try:
             response.raise_for_status()
 
-        except requests.HTTPError:
+        except requests.HTTPError as http_error:
 
             if response.status_code == 400:
-                raise BadRequestException(message=content_text)
+                raise BadRequestException(message=content_text) from http_error
 
-            else:
-                raise response.raise_for_status()
+            raise requests.HTTPError(http_error) from http_error
 
-        except Exception as e:
-            raise e
+        except Exception as exc:
+            raise exc
 
     def __request_helper(
         self,
@@ -87,7 +99,7 @@ class BaseRequests:
         if not headers:
             headers = {}
 
-        request_url = generate_url(base_path=self.BASE_PATH, path=path)
+        request_url = generate_url(base_path=self.base_path, path=path)
         self.__headers = {**self.__authorization_header(), **headers}
 
         response = None
@@ -99,6 +111,7 @@ class BaseRequests:
                 headers=self.__headers,
                 params=parameters,
                 data=data,
+                timeout=TIMEOUT,
             )
 
         elif method == "post":
@@ -108,6 +121,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
+                timeout=TIMEOUT,
             )
 
         elif method == "put":
@@ -117,6 +131,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
+                timeout=TIMEOUT,
             )
 
         elif method == "patch":
@@ -126,6 +141,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
+                timeout=TIMEOUT,
             )
 
         elif method == "delete":
@@ -135,13 +151,13 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
+                timeout=TIMEOUT,
             )
 
         # Check response
         self.__check_response(response)
 
-        if (type(response) is not list) & (response is not None):
-            response_json = response.json()
+        response_json = response.json()
 
         if response_json.get("count") and response_json.get("next"):
             return ApiPaginationResponse(**response_json, headers=self.__headers)
@@ -153,7 +169,8 @@ class BaseRequests:
         path: str,
         headers: dict = None,
         parameters: dict = None,
-    ):
+    ) -> Any:
+        """Use GET method on Rest API"""
         return self.__request_helper(
             path=path, method="get", headers=headers, parameters=parameters
         )
@@ -166,6 +183,7 @@ class BaseRequests:
         data: Any = None,
         json: Any = None,
     ) -> Any:
+        """Use POST method on Rest API"""
         return self.__request_helper(
             path=path,
             method="post",
@@ -182,6 +200,7 @@ class BaseRequests:
         parameters: dict = None,
         data: Any = None,
     ):
+        """Use PUT method on Rest API"""
         return self.__request_helper(
             path=path,
             method="put",
@@ -197,6 +216,7 @@ class BaseRequests:
         parameters: dict = None,
         data: Any = None,
     ):
+        """Use PATCH method on Rest API"""
         return self.__request_helper(
             path=path,
             method="patch",
@@ -212,6 +232,7 @@ class BaseRequests:
         parameters: dict = None,
         data: Any = None,
     ):
+        """Use DELETE method on Rest API"""
         return self.__request_helper(
             path=path,
             method="delete",
