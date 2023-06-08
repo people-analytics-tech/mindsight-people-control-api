@@ -6,11 +6,12 @@ on: # yamllint disable-line rule:truthy
     push:
         branches: [ "main" ]
         tags:
-            - "v*"
+            - "**"
 
 jobs:
   release:
     name: "Release"
+    permissions: write-all
 
     runs-on: "ubuntu-latest"
 
