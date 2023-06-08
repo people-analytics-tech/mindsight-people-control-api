@@ -1,0 +1,223 @@
+from datetime import date, datetime
+from typing import Literal
+
+from mindsight_people_control_api.helpers.base_requests import (
+    ApiPaginationResponse,
+    BaseRequests,
+)
+from mindsight_people_control_api.settings import (
+    API_ENDPOINT_AREAS,
+    API_ENDPOINT_EMPLOYEES,
+    API_ENDPOINT_POSITIONS,
+    DATE_FORMAT,
+    PAGE_SIZE,
+)
+from mindsight_people_control_api.utils.aux_functions import generate_url
+
+
+class Employees:
+    base_requests = BaseRequests()
+
+    def __init__(self) -> None:
+        self.base_requests.BASE_PATH = API_ENDPOINT_EMPLOYEES
+        self.PAGE_SIZE = PAGE_SIZE
+
+    def get_list_employees(
+        self,
+        first_name: str = None,
+        last_name: str = None,
+        email: str = None,
+        employee_code: str = None,
+        created__gt: datetime = None,
+        created__lt: datetime = None,
+        modified__gt: datetime = None,
+        modified__lt: datetime = None,
+        active: str = None,
+        search: str = None,
+    ) -> ApiPaginationResponse:
+        """Get areas data
+        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Funcionarios/operation/listEmployees
+
+        Args:
+            first_name (str, Optional): Employee first name
+            last_name (str, Optional): Employee last name
+            email (str, Optional): Employee email
+            employee_code (str, Optional): Employee code
+            created__gt (str, Optional): Datetime to apply filter ">=" on created dates. Format "%Y-%m-%d %H:%M:%S"
+            created__lt (str, Optional): Datetime to apply filter "<=" on created dates. Format "%Y-%m-%d %H:%M:%S"
+            modified__gt (str, Optional): Datetime to apply filter ">=" on modified dates. Format "%Y-%m-%d %H:%M:%S"
+            modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates. Format "%Y-%m-%d %H:%M:%S"
+            active (str, Optional): is_active: Flag to get areas by status
+            search: A search term.
+        """
+
+        path = ""
+        parameters = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "employee_code": employee_code,
+            "created__gt": created__gt,
+            "created__lt": created__lt,
+            "modified__gt": modified__gt,
+            "modified__lt": modified__lt,
+            "active": active,
+            "search": search,
+            "page_size": self.PAGE_SIZE,
+        }
+        return self.base_requests.get(path=path, parameters=parameters)
+
+    def get_retrieve_employee(
+        self,
+        id: int,
+        first_name: str = None,
+        last_name: str = None,
+        email: str = None,
+        employee_code: str = None,
+        created__gt: datetime = None,
+        created__lt: datetime = None,
+        modified__gt: datetime = None,
+        modified__lt: datetime = None,
+        active: str = None,
+        search: str = None,
+    ) -> dict:
+        """Get retrieve employee register
+        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Funcionarios/operation/retrieveEmployee
+
+        Args:
+            id (int, Mandatory): Id of employee to retrieve
+            first_name (str, Optional): Employee first name
+            last_name (str, Optional): Employee last name
+            email (str, Optional): Employee email
+            employee_code (str, Optional): Employee code
+            created__gt (str, Optional): Datetime to apply filter ">=" on created dates. Format "%Y-%m-%d %H:%M:%S"
+            created__lt (str, Optional): Datetime to apply filter "<=" on created dates. Format "%Y-%m-%d %H:%M:%S"
+            modified__gt (str, Optional): Datetime to apply filter ">=" on modified dates. Format "%Y-%m-%d %H:%M:%S"
+            modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates. Format "%Y-%m-%d %H:%M:%S"
+            active (str, Optional): is_active: Flag to get areas by status
+            search: A search term.
+        """
+        path = f"/{id}"
+
+        parameters = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "employee_code": employee_code,
+            "created__gt": created__gt,
+            "created__lt": created__lt,
+            "modified__gt": modified__gt,
+            "modified__lt": modified__lt,
+            "active": active,
+            "search": search,
+        }
+        return self.base_requests.get(
+            path=path,
+            parameters=parameters,
+        )
+
+    def post_create_employee(
+        self,
+        first_name: str,
+        last_name: str,
+        username: str,
+        email: str,
+        employee_code: str,
+        start_date: date,
+        area: int = None,
+        position: int = None,
+        manager: int = None,
+    ):
+        """Create new employee
+        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Funcionarios/operation/createCompleteEmployee
+
+        Args:
+            first_name (str, Mandatory): Employee first name with 200 characters or fewer
+            last_name (str, Mandatory): Employee last name with 200 characters or fewer
+            username (str, Mandatory): Username with 254 characters or fewer. Letters, digits and @/./+/-/_ only
+            email (str, Mandatory): Employee email
+            employee_code (str, Mandatory): The employee code
+            start_date (date, Mandatory): Start date of employee
+            area (int, Optional): Employee area id
+            position (int, Optional): Employee position id
+            manager (int, Optional): Employee manager id
+        """
+        path = "/create_complete"
+        data = {
+            "first_name": first_name,
+            "last_name": last_name,
+            "username": username,
+            "email": email,
+            "employee_code": employee_code,
+            "start_date": start_date.strftime(DATE_FORMAT),
+            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}"),
+            "position": generate_url(
+                base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
+            ),
+            "manager": generate_url(
+                base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager}"
+            ),
+        }
+
+        return self.base_requests.post(path=path, json=data)
+
+    def post_activate_employee(
+        self,
+        id: int,
+        start_date: date,
+        area: int = None,
+        position: int = None,
+        manager: int = None,
+    ):
+        """Activate employee
+        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Funcionarios/operation/activateEmployee
+
+        Args:
+            id (int, Mandatory): Id of employee
+            start_date (date, Mandatory): Start date of employee
+            area (int, Optional): Employee area id
+            position (int, Optional): Employee position id
+            manager (int, Optional): Employee manager id
+        """
+        path = f"{id}/activate"
+
+        data = {
+            "start_date": start_date.strftime(DATE_FORMAT),
+            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}"),
+            "position": generate_url(
+                base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
+            ),
+            "manager": generate_url(
+                base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager}"
+            ),
+        }
+
+        return self.base_requests.post(path=path, json=data)
+
+    def post_deactivate_employee(
+        self,
+        id: int,
+        end_date: date,
+        termination_type: Literal[
+            "dismissed", "resigned", "transfer", "intern_to_full", "others"
+        ] = "others",
+        termination_reason: str = None,
+    ):
+        """Deactivate employee
+        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Funcionarios/operation/deactivateEmployee
+
+        Args:
+            id (int, Mandatory): Id of employee
+            end_date (date, Mandatory): Start date of employee
+            termination_type (str, Optional): Termination type, default "others"
+            termination_reason (str, Optional): Termination reason
+        """
+        path = f"{id}/deactivate"
+
+        data = {
+            "end_date": end_date.strftime(DATE_FORMAT),
+            "termination_type": termination_type,
+            "termination_reason": termination_reason,
+        }
+
+        return self.base_requests.post(path=path, json=data)
