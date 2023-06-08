@@ -9,8 +9,8 @@ API_VERSION = "v1"
 PAGE_SIZE = 1000
 
 # Date formats
-datetime_format = "%Y-%m-%dT%H:%M:%SZ"
-date_format = "%Y-%m-%d"
+DATETIME_FORMAT = "%Y-%m-%dT%H:%M:%SZ"
+DATE_FORMAT = "%Y-%m-%d"
 
 # Endpoints
 API_ENDPOINT_EMPLOYEES = "/employees"

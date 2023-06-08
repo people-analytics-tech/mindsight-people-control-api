@@ -6,8 +6,8 @@ from mindsight_people_control_api.helpers.base_requests import (
 )
 from mindsight_people_control_api.settings import (
     API_ENDPOINT_USERS,
+    DATETIME_FORMAT,
     PAGE_SIZE,
-    datetime_format,
 )
 
 
@@ -93,8 +93,8 @@ class Users:
             "is_superuser": is_superuser,
             "is_staff": is_staff,
             "is_active": is_active,
-            "last_login": last_login.strftime(datetime_format) if last_login else None,
-            "date_joined": date_joined.strftime(datetime_format)
+            "last_login": last_login.strftime(DATETIME_FORMAT) if last_login else None,
+            "date_joined": date_joined.strftime(DATETIME_FORMAT)
             if date_joined
             else None,
         }
@@ -138,8 +138,8 @@ class Users:
             "is_superuser": is_superuser,
             "is_staff": is_staff,
             "is_active": is_active,
-            "last_login": last_login.strftime(datetime_format) if last_login else None,
-            "date_joined": date_joined.strftime(datetime_format)
+            "last_login": last_login.strftime(DATETIME_FORMAT) if last_login else None,
+            "date_joined": date_joined.strftime(DATETIME_FORMAT)
             if date_joined
             else None,
         }
@@ -182,8 +182,8 @@ class Users:
             "is_superuser": is_superuser,
             "is_staff": is_staff,
             "is_active": is_active,
-            "last_login": last_login.strftime(datetime_format) if last_login else None,
-            "date_joined": date_joined.strftime(datetime_format)
+            "last_login": last_login.strftime(DATETIME_FORMAT) if last_login else None,
+            "date_joined": date_joined.strftime(DATETIME_FORMAT)
             if date_joined
             else None,
         }

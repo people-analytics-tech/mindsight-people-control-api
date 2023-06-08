@@ -6,8 +6,8 @@ from mindsight_people_control_api.helpers.base_requests import (
 )
 from mindsight_people_control_api.settings import (
     API_ENDPOINT_AREAS,
+    DATE_FORMAT,
     PAGE_SIZE,
-    date_format,
 )
 
 
@@ -121,7 +121,7 @@ class Areas:
         data = {
             "code": code,
             "name": name,
-            "start_date": start_date.strftime(date_format),
+            "start_date": start_date.strftime(DATE_FORMAT),
             "parent_area": parent_area,
         }
 
@@ -149,8 +149,8 @@ class Areas:
         data = {
             "code": code,
             "name": name,
-            "start_date": start_date.strftime(date_format) if start_date else None,
-            "end_date": end_date.strftime(date_format) if end_date else None,
+            "start_date": start_date.strftime(DATE_FORMAT) if start_date else None,
+            "end_date": end_date.strftime(DATE_FORMAT) if end_date else None,
         }
         return self.base_requests.patch(path=path, data=data)
 
@@ -169,7 +169,7 @@ class Areas:
         path = f"/{id}/edit_parent"
         data = {
             "parent_id": parent_id,
-            "start_date": start_date.strftime(date_format) if start_date else None,
-            "end_date": end_date.strftime(date_format) if start_date else None,
+            "start_date": start_date.strftime(DATE_FORMAT) if start_date else None,
+            "end_date": end_date.strftime(DATE_FORMAT) if start_date else None,
         }
         return self.base_requests.patch(path=path, data=data)

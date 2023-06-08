@@ -9,8 +9,8 @@ from mindsight_people_control_api.settings import (
     API_ENDPOINT_AREAS,
     API_ENDPOINT_EMPLOYEES,
     API_ENDPOINT_POSITIONS,
+    DATE_FORMAT,
     PAGE_SIZE,
-    date_format,
 )
 from mindsight_people_control_api.utils.aux_functions import generate_url
 
@@ -149,7 +149,7 @@ class Employees:
             "username": username,
             "email": email,
             "employee_code": employee_code,
-            "start_date": start_date.strftime(date_format),
+            "start_date": start_date.strftime(DATE_FORMAT),
             "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}"),
             "position": generate_url(
                 base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
@@ -182,7 +182,7 @@ class Employees:
         path = f"{id}/activate"
 
         data = {
-            "start_date": start_date.strftime(date_format),
+            "start_date": start_date.strftime(DATE_FORMAT),
             "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}"),
             "position": generate_url(
                 base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
@@ -215,7 +215,7 @@ class Employees:
         path = f"{id}/deactivate"
 
         data = {
-            "end_date": end_date.strftime(date_format),
+            "end_date": end_date.strftime(DATE_FORMAT),
             "termination_type": termination_type,
             "termination_reason": termination_reason,
         }
