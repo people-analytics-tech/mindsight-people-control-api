@@ -9,52 +9,12 @@ from mindsight_people_control_api.settings import API_TOKEN, TIMEOUT
 from mindsight_people_control_api.utils.aux_functions import generate_url
 
 
-class ApiPaginationResponse:
-    """Class to work with paginated responses"""
-
-    results: list = []
-
-    def __init__(
-        self,
-        count: int,
-        previous: str = None,
-        results: list = None,
-        headers: dict = None,
-        **kwargs,
-    ) -> None:
-        self.count = count
-        self.next = kwargs.get("next")
-        self.previous = previous
-        self.results.extend(results if results else [])
-        self.__headers = headers
-
-    def get_all(self):
-        """Get all pages of data"""
-        if self.next:
-            response = requests.get(
-                url=self.next, headers=self.__headers, timeout=TIMEOUT
-            )
-
-            response.raise_for_status()
-            response_data = response.json()
-
-            self.results.extend(response_data["results"])
-            self.count = response_data["count"]
-            self.next = response_data["next"]
-            self.previous = response_data["previous"]
-
-            if self.next:
-                self.get_all()
-
-        return self
-
-
 class BaseRequests:
     """Aux class to communicate with mindsight api"""
 
     def __init__(self):
         self.__token = API_TOKEN
-        self.__headers = None
+        self.headers = None
         self.base_path = "/"
 
     def __authorization_header(self) -> dict:
@@ -100,7 +60,7 @@ class BaseRequests:
             headers = {}
 
         request_url = generate_url(base_path=self.base_path, path=path)
-        self.__headers = {**self.__authorization_header(), **headers}
+        self.headers = {**self.__authorization_header(), **headers}
 
         response = None
         method = method.lower()
@@ -108,7 +68,7 @@ class BaseRequests:
         if method == "get":
             response = requests.get(
                 url=request_url,
-                headers=self.__headers,
+                headers=self.headers,
                 params=parameters,
                 data=data,
                 timeout=TIMEOUT,
@@ -117,7 +77,7 @@ class BaseRequests:
         elif method == "post":
             response = requests.post(
                 url=request_url,
-                headers=self.__headers,
+                headers=self.headers,
                 params=parameters,
                 data=data,
                 json=json,
@@ -127,7 +87,7 @@ class BaseRequests:
         elif method == "put":
             response = requests.put(
                 url=request_url,
-                headers=self.__headers,
+                headers=self.headers,
                 params=parameters,
                 data=data,
                 json=json,
@@ -137,7 +97,7 @@ class BaseRequests:
         elif method == "patch":
             response = requests.patch(
                 url=request_url,
-                headers=self.__headers,
+                headers=self.headers,
                 params=parameters,
                 data=data,
                 json=json,
@@ -147,7 +107,7 @@ class BaseRequests:
         elif method == "delete":
             response = requests.delete(
                 url=request_url,
-                headers=self.__headers,
+                headers=self.headers,
                 params=parameters,
                 data=data,
                 json=json,
@@ -158,9 +118,6 @@ class BaseRequests:
         self.__check_response(response)
 
         response_json = response.json()
-
-        if response_json.get("count") and response_json.get("next"):
-            return ApiPaginationResponse(**response_json, headers=self.__headers)
 
         return response_json
 

@@ -1,4 +1,3 @@
-"""This module provide methods to work with areas records entity"""
 from datetime import datetime
 
 from mindsight_people_control_api.helpers.models import (
@@ -6,51 +5,55 @@ from mindsight_people_control_api.helpers.models import (
     ApiPaginationResponse,
 )
 from mindsight_people_control_api.settings import (
-    API_ENDPOINT_AREAS_RECORDS,
+    API_ENDPOINT_EMPLOYEE_RECORDS,
+    API_ENDPOINT_EMPLOYEES,
     DATETIME_FORMAT,
 )
+from mindsight_people_control_api.utils.aux_functions import generate_url
 
 
-class AreaRecords(ApiEndpoint):
-    """This class abstract the areas records endpoint methods
-    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area
+class EmployeeRecord(ApiEndpoint):
+    """This class abstract the employee records endpoint methods
+    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-do-funcionario
     """
 
     def __init__(self) -> None:
-        super().__init__(API_ENDPOINT_AREAS_RECORDS)
+        super().__init__(API_ENDPOINT_EMPLOYEE_RECORDS)
 
-    def get_list_area_records(
+    def get_list_employees_records(
         self,
-        area: str = None,
-        code: str = None,
+        employee_id: int = None,
         created__gt: datetime = None,
         created__lt: datetime = None,
         modified__gt: datetime = None,
         modified__lt: datetime = None,
         search: str = None,
     ) -> ApiPaginationResponse:
-        """Get areas data
+        """Get employees records data
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area/operation/listAreaRecords
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-do-funcionario/operation/retrieveEmployeeRecord
 
         Args:
-            area (str, Optional): Area name
-            code (str, Optional): Code of area
-            created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
+            employee_id (int, Optional): Employee id
+            created__gt (str, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
+            created__lt (str, Optional): Datetime to apply filter "<=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__gt (datetime, Optional): Datetime to apply filter ">=" on modified dates.
+            modified__gt (str, Optional): Datetime to apply filter ">=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__lt (datetime, Optional): Datetime to apply filter "<=" on modified dates.
+            modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            search: search
+            active (str, Optional): is_active: Flag to get areas by status
+            search: A search term.
         """
 
         path = ""
         parameters = {
-            "area": area,
-            "code": code,
+            "employee": (
+                generate_url(base_path=API_ENDPOINT_EMPLOYEES, path=f"/{employee_id}")
+                if employee_id
+                else None
+            ),
             "created__gt": created__gt.strftime(DATETIME_FORMAT)
             if created__gt
             else None,
@@ -71,40 +74,43 @@ class AreaRecords(ApiEndpoint):
             headers=self._base_requests.headers,
         )
 
-    def get_retrieve_area_record(
+    def get_retrieve_employee_record(
         self,
         _id: int,
-        area: str = None,
-        code: str = None,
+        employee_id: int = None,
         created__gt: datetime = None,
         created__lt: datetime = None,
         modified__gt: datetime = None,
         modified__lt: datetime = None,
         search: str = None,
     ) -> dict:
-        """Get retrieve area
+        """Get employees records data
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area/operation/retrieveAreaRecord
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-do-funcionario/operation/retrieveEmployeeRecord
 
         Args:
-            _id (int, Mandatory): A unique integer value identifying this record of area.
-            area (str, Optional): Area name
-            code (str, Optional): Code of area
-            created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
+            _id (int, Optional): A unique integer value identifying employee record
+            employee_id (int, Optional): Employee id
+            created__gt (str, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
+            created__lt (str, Optional): Datetime to apply filter "<=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__gt (datetime, Optional): Datetime to apply filter ">=" on modified dates.
+            modified__gt (str, Optional): Datetime to apply filter ">=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__lt (datetime, Optional): Datetime to apply filter "<=" on modified dates.
+            modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            search (str, Optional): search
+            active (str, Optional): is_active: Flag to get areas by status
+            search: A search term.
         """
+
         path = f"/{_id}"
 
         parameters = {
-            "area": area,
-            "code": code,
+            "employee": (
+                generate_url(base_path=API_ENDPOINT_EMPLOYEES, path=f"/{employee_id}")
+                if employee_id
+                else None
+            ),
             "created__gt": created__gt.strftime(DATETIME_FORMAT)
             if created__gt
             else None,
@@ -119,7 +125,4 @@ class AreaRecords(ApiEndpoint):
             else None,
             "search": search,
         }
-        return self._base_requests.get(
-            path=path,
-            parameters=parameters,
-        )
+        return self._base_requests.get(path=path, parameters=parameters)
