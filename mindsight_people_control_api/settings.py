@@ -17,9 +17,12 @@ DATE_FORMAT = "%Y-%m-%d"
 
 # Endpoints
 API_ENDPOINT_EMPLOYEES = "/employees"
+API_ENDPOINT_EMPLOYEE_RECORDS = "/employee_records"
 API_ENDPOINT_AREAS = "/areas"
 API_ENDPOINT_AREAS_RECORDS = "/area_records"
+API_ENDPOINT_PARENT_AREAS = "/parent_areas"
 API_ENDPOINT_EMPLOYEE_AREAS = "/employee_areas"
-API_ENDPOINT_EMPLOYEE_MANAGERS = "/employee_manager"
+API_ENDPOINT_EMPLOYEE_POSITIONS = "/employee_positions"
+API_ENDPOINT_EMPLOYEE_MANAGERS = "/employee_managers"
 API_ENDPOINT_USERS = "/users"
 API_ENDPOINT_POSITIONS = "/positions"

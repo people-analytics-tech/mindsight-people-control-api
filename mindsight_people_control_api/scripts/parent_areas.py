@@ -6,23 +6,24 @@ from mindsight_people_control_api.helpers.models import (
     ApiPaginationResponse,
 )
 from mindsight_people_control_api.settings import (
-    API_ENDPOINT_AREAS_RECORDS,
+    API_ENDPOINT_AREAS,
+    API_ENDPOINT_PARENT_AREAS,
     DATETIME_FORMAT,
 )
+from mindsight_people_control_api.utils.aux_functions import generate_url
 
 
-class AreaRecords(ApiEndpoint):
+class ParentAreas(ApiEndpoint):
     """This class abstract the areas records endpoint methods
-    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area
+    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas-pai
     """
 
     def __init__(self) -> None:
-        super().__init__(API_ENDPOINT_AREAS_RECORDS)
+        super().__init__(API_ENDPOINT_PARENT_AREAS)
 
-    def get_list_area_records(
+    def get_list_parent_areas(
         self,
-        area: str = None,
-        code: str = None,
+        area_id: int = None,
         created__gt: datetime = None,
         created__lt: datetime = None,
         modified__gt: datetime = None,
@@ -31,11 +32,10 @@ class AreaRecords(ApiEndpoint):
     ) -> ApiPaginationResponse:
         """Get areas data
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area/operation/listAreaRecords
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas-pai/operation/listParentAreas
 
         Args:
-            area (str, Optional): Area name
-            code (str, Optional): Code of area
+            area_id (int, Optional): Area id
             created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
             created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
@@ -49,8 +49,11 @@ class AreaRecords(ApiEndpoint):
 
         path = ""
         parameters = {
-            "area": area,
-            "code": code,
+            "area": (
+                generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area_id}")
+                if area_id
+                else None
+            ),
             "created__gt": created__gt.strftime(DATETIME_FORMAT)
             if created__gt
             else None,
@@ -71,40 +74,41 @@ class AreaRecords(ApiEndpoint):
             headers=self._base_requests.headers,
         )
 
-    def get_retrieve_area_record(
+    def get_retrieve_parent_area(
         self,
         _id: int,
-        area: str = None,
-        code: str = None,
+        area_id: int = None,
         created__gt: datetime = None,
         created__lt: datetime = None,
         modified__gt: datetime = None,
         modified__lt: datetime = None,
         search: str = None,
     ) -> dict:
-        """Get retrieve area
+        """Get retrieve parent area record
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Registros-de-area/operation/retrieveAreaRecord
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas-pai/operation/retrieveParentArea
 
         Args:
-            _id (int, Mandatory): A unique integer value identifying this record of area.
-            area (str, Optional): Area name
-            code (str, Optional): Code of area
-            created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
+            _id (int, Mandatory): A unique integer value identifying parent area record.
+            area_id (str, Optional): Area id
+            created__gt (str, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
+            created__lt (str, Optional): Datetime to apply filter "<=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__gt (datetime, Optional): Datetime to apply filter ">=" on modified dates.
+            modified__gt (str, Optional): Datetime to apply filter ">=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            modified__lt (datetime, Optional): Datetime to apply filter "<=" on modified dates.
+            modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
             search (str, Optional): search
         """
         path = f"/{_id}"
 
         parameters = {
-            "area": area,
-            "code": code,
+            "area": (
+                generate_url(base_path=API_ENDPOINT_AREAS, path=area_id)
+                if area_id
+                else None
+            ),
             "created__gt": created__gt.strftime(DATETIME_FORMAT)
             if created__gt
             else None,

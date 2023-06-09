@@ -1,4 +1,4 @@
-"""This module provide methods to work with areas entity"""
+"""This module provide methods to work with positions entity"""
 
 from datetime import date, datetime
 
@@ -7,21 +7,21 @@ from mindsight_people_control_api.helpers.models import (
     ApiPaginationResponse,
 )
 from mindsight_people_control_api.settings import (
-    API_ENDPOINT_AREAS,
+    API_ENDPOINT_POSITIONS,
     DATE_FORMAT,
     DATETIME_FORMAT,
 )
 
 
-class Areas(ApiEndpoint):
-    """This class abstract the areas endpoint methods
-    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas
+class Positions(ApiEndpoint):
+    """This class abstract the positions endpoint methods
+    Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Cargos
     """
 
     def __init__(self) -> None:
-        super().__init__(API_ENDPOINT_AREAS)
+        super().__init__(API_ENDPOINT_POSITIONS)
 
-    def get_list_areas(
+    def get_list_positions(
         self,
         name: str = None,
         code: str = None,
@@ -32,12 +32,13 @@ class Areas(ApiEndpoint):
         active: str = None,
         search: str = None,
     ) -> ApiPaginationResponse:
-        """Get areas data
-        Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#operation/listAreas
+        """Get positions data
+        Reference:
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Cargos/operation/listPositions
 
         Args:
-            name (str, Optional): area_name
-            code (str, Optional): Code of area
+            name (str, Optional): Position name
+            code (str, Optional): Code of position
             created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
             created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
@@ -46,7 +47,7 @@ class Areas(ApiEndpoint):
                 Format "%Y-%m-%d %H:%M:%S"
             modified__lt (datetime, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            active (str, Optional): is_active: Flag to get areas by status
+            active (str, Optional): is_active: Flag to get positions by status
             search: search
             }
         """
@@ -76,7 +77,7 @@ class Areas(ApiEndpoint):
             headers=self._base_requests.headers,
         )
 
-    def get_retrieve_area(
+    def get_retrieve_position(
         self,
         _id: int,
         name: str = None,
@@ -88,14 +89,14 @@ class Areas(ApiEndpoint):
         active: str = None,
         search: str = None,
     ) -> dict:
-        """Get retrieve area
+        """Get retrieve position
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas/operation/retrieveArea
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Cargos/operation/retrievePosition
 
         Args:
-            _id (int, Mandatory): Id of area to retrieve
-            name (str, Optional): Name of area
-            code (str, Optional): Code of area
+            _id (int, Mandatory): Id of position to retrieve
+            name (str, Optional): Name of position
+            code (str, Optional): Code of position
             created__gt (datetime, Optional): Datetime to apply filter ">=" on created dates.
                 Format "%Y-%m-%d %H:%M:%S"
             created__lt (datetime, Optional): Datetime to apply filter "<=" on created dates.
@@ -104,7 +105,7 @@ class Areas(ApiEndpoint):
                 Format "%Y-%m-%d %H:%M:%S"
             modified__lt (datetime, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            active (str, Optional): is_active: Flag to get areas by status
+            active (str, Optional): is_active: Flag to get positions by status
             search (str, Optional): search
         """
         path = f"/{_id}"
@@ -132,82 +133,66 @@ class Areas(ApiEndpoint):
             parameters=parameters,
         )
 
-    def post_create_area(
+    def post_create_position(
         self,
         code: str,
         name: str,
         start_date: date,
-        parent_area: int = None,
+        category: str = None,
+        description: str = None,
     ):
-        """Create new area
+        """Create new position
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas/operation/createCompleteArea
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Cargos/operation/createCompletePosition
 
         Args:
-            code (str, Mandatory): Code of area
-            name (str, Mandatory): Name of area
-            start_date (date, Mandatory): Area start date
-            parent_area (int, Optional): Parent area id
+            code (str, Mandatory): Code of position
+            name (str, Mandatory): Name of position
+            start_date (date, Mandatory): Position start date
+            category (str, Optional): Position category
+            description (str, Optional): Position description
         """
         path = "/create_complete"
         data = {
             "code": code,
             "name": name,
             "start_date": start_date.strftime(DATE_FORMAT),
-            "parent_area": parent_area,
+            "category": category,
+            "description": description,
         }
 
-        return self._base_requests.post(path=path, data=data)
+        return self._base_requests.post(path=path, json=data)
 
-    def patch_edit_area(
+    def patch_edit_position(
         self,
         _id: int,
         code: str = None,
         name: str = None,
+        category: str = None,
+        description: str = None,
         start_date: date = None,
         end_date: date = None,
     ) -> dict:
-        """Edit area and last area record
+        """Edit position and last position record
         Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas/operation/editAreaAndRecordArea
+            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Cargos/operation/editPositionAndRecordPosition
 
         Args:
-            _id (int, Mandatory): Area id
-            code (str, Optional): Code of area
-            name (str, Optional): Name of area
-            start_date (date, Optional): Area start date
-            end_date (date, Optional): Area end date
+            _id (int, Mandatory): Position id
+            code (str, Optional): Code of position
+            name (str, Optional): Name of position
+            category (str, Optional): Category of position
+            description (str, Optional): Description of position
+            start_date (date, Optional): Position start date
+            end_date (date, Optional): Position end date
         """
-        path = f"/{_id}/edit_area_and_record"
+        path = f"/{_id}/edit_position_and_record"
         data = {
             "code": code,
             "name": name,
+            "category": category,
+            "description": description,
             "start_date": start_date.strftime(DATE_FORMAT) if start_date else None,
             "end_date": end_date.strftime(DATE_FORMAT) if end_date else None,
-        }
-        return self._base_requests.patch(path=path, data=data)
-
-    def patch_edit_parent_area(
-        self,
-        _id: int,
-        parent_id: int,
-        start_date: date,
-        end_date: date = None,
-    ) -> dict:
-        """Edit parent area
-        Reference:
-            https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Areas/operation/editParentArea
-
-        Args:
-            _id (int, Mandatory): Area id
-            parent_id (int, Mandatory): id of parent area
-            start_date (date, Mandatory): Parent area assignment start date
-            end_date (date, Optional): Parent area assignment end date
-        """
-        path = f"/{_id}/edit_parent"
-        data = {
-            "parent_id": parent_id,
-            "start_date": start_date.strftime(DATE_FORMAT) if start_date else None,
-            "end_date": end_date.strftime(DATE_FORMAT) if start_date else None,
         }
         return self._base_requests.patch(path=path, data=data)

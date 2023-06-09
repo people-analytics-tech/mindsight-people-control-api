@@ -2,27 +2,20 @@
 
 from datetime import datetime
 
-from mindsight_people_control_api.helpers.base_requests import (
+from mindsight_people_control_api.helpers.models import (
+    ApiEndpoint,
     ApiPaginationResponse,
-    BaseRequests,
 )
-from mindsight_people_control_api.settings import (
-    API_ENDPOINT_USERS,
-    DATETIME_FORMAT,
-    PAGE_SIZE,
-)
+from mindsight_people_control_api.settings import API_ENDPOINT_USERS, DATETIME_FORMAT
 
 
-class Users:
+class Users(ApiEndpoint):
     """This class abstract the users endpoint methods
     Reference: https://controle.mindsight.com.br/stone/api/v1/docs/#tag/Users
     """
 
-    base_requests = BaseRequests()
-
     def __init__(self) -> None:
-        self.base_requests.base_path = API_ENDPOINT_USERS
-        self.page_size = PAGE_SIZE
+        super().__init__(API_ENDPOINT_USERS)
 
     def get_list_users(
         self,
@@ -41,7 +34,10 @@ class Users:
             "search": search,
             "page_size": self.page_size,
         }
-        return self.base_requests.get(path=path, parameters=parameters)
+        return ApiPaginationResponse(
+            **self._base_requests.get(path=path, parameters=parameters),
+            headers=self._base_requests.headers,
+        )
 
     def get_retrieve_user(
         self,
@@ -61,7 +57,7 @@ class Users:
         parameters = {
             "search": search,
         }
-        return self.base_requests.get(
+        return self._base_requests.get(
             path=path,
             parameters=parameters,
         )
@@ -109,7 +105,7 @@ class Users:
             else None,
         }
 
-        return self.base_requests.post(path=path, json=data)
+        return self._base_requests.post(path=path, json=data)
 
     def patch_update_user(
         self,
@@ -155,7 +151,7 @@ class Users:
             if date_joined
             else None,
         }
-        return self.base_requests.patch(path=path, data=data)
+        return self._base_requests.patch(path=path, data=data)
 
     def put_full_update_user(
         self,
@@ -201,7 +197,7 @@ class Users:
             if date_joined
             else None,
         }
-        return self.base_requests.put(path=path, data=data)
+        return self._base_requests.put(path=path, data=data)
 
     def delete_destroy_user(self, _id: int, search: str = None):
         """Delete user
@@ -217,4 +213,4 @@ class Users:
         parameters = {
             "search": search,
         }
-        return self.base_requests.delete(path=path, parameters=parameters)
+        return self._base_requests.delete(path=path, parameters=parameters)
