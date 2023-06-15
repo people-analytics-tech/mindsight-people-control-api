@@ -1,12 +1,16 @@
 [tool.poetry]
 name = "mindsight-people-control-api"
-version = "0.1.5"
+version = "0.1.6"
 description = "Mindsight People Control API to create, update and delete records"
-authors = ["Diogo56 <diogo.amorim2001@gmail.com>"]
+authors = ["stone_people_analytics <systems-techpeople@stone.com.br>"]
+maintainers = [
+    "Diogo56 <diogo.amorim2001@gmail.com>",
+    "guilhermelaercio <guilhermelaerciodasilva@gmail.com>",
+]
 readme = "README.md"
 packages = [{include = "mindsight_people_control_api"}]
 license = "MIT"
-repository = "https://github.com/Diogo56/mindsight-people-control-api"
+repository = "https://github.com/people-analytics-tech/mindsight-people-control-api"
 
 [tool.poetry.dependencies]
 python = "^3.9"
