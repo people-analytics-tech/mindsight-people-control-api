@@ -16,7 +16,7 @@ MINDSIGHT_API_TOKEN= # Token to authenticate
 MINDSIGHT_API_BASE_URL=https://controle.mindsight.com.br/api # Base path of your api instance
 ```
 # Usage Example
-You can use mindsight-people-control-api create, update and delete registers on all system tables.
+You can use mindsight-people-control-api in order to create, update and delete registers on all system tables.
 
 ## List registers
 You can use get methods to list registers of system table. See the following example:
