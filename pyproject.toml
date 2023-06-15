@@ -4,8 +4,8 @@ version = "0.1.6"
 description = "Mindsight People Control API to create, update and delete records"
 authors = ["stone_people_analytics <systems-techpeople@stone.com.br>"]
 maintainers = [
-    "Diogo56 <diogo.amorim2001@gmail.com>",
-    "guilhermelaercio <guilhermelaerciodasilva@gmail.com>",
+    "diogo56 <diogo.amorim2001@gmail.com>",
+    "guilherme_lsilva <manager.guilherme.silva@gmail.com>",
 ]
 readme = "README.md"
 packages = [{include = "mindsight_people_control_api"}]
