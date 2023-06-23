@@ -9,6 +9,7 @@ from mindsight_people_control_api.scripts import (
     EmployeeRecord,
     Employees,
     ParentAreas,
+    PositionRecords,
     Positions,
     Users,
 )
