@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mindsight-people-control-api"
-version = "0.1.7"
+version = "0.1.7.1"
 description = "Mindsight People Control API to create, update and delete records"
 authors = ["stone_people_analytics <systems-techpeople@stone.com.br>"]
 maintainers = [
