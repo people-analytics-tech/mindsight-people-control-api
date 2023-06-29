@@ -12,8 +12,8 @@ pip install mindsight-people-control-api
 To use mindsight-people-control-api, you need to set two environment variables:
 ```dotenv
 # ---DOTENV EXAMPLE---
-MINDSIGHT_API_TOKEN= # Token to authenticate
-MINDSIGHT_API_BASE_URL=https://controle.mindsight.com.br/api # Base path of your api instance
+MINDSIGHT_CP_API_TOKEN= # Token to authenticate
+MINDSIGHT_CP_API_URL=https://controle.mindsight.com.br/api # Base path of your api instance
 ```
 # Usage Example
 You can use mindsight-people-control-api create, update and delete registers on all system tables.
