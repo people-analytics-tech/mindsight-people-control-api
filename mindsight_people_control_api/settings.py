@@ -3,8 +3,8 @@
 from decouple import config
 
 # API Constants
-API_TOKEN = config("MINDSIGHT_API_TOKEN")
-API_BASE_URL = config("MINDSIGHT_API_BASE_URL")
+API_TOKEN = config("MINDSIGHT_CP_API_TOKEN")
+API_BASE_URL = config("MINDSIGHT_CP_API_URL")
 API_VERSION = "v1"
 
 # Request config
