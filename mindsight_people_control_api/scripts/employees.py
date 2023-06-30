@@ -197,7 +197,7 @@ class Employees(ApiEndpoint):
             position (int, Optional): Employee position id
             manager (int, Optional): Employee manager id
         """
-        path = f"{_id}/activate"
+        path = f"/{_id}/activate"
 
         data = {
             "start_date": start_date.strftime(DATE_FORMAT),
@@ -231,7 +231,7 @@ class Employees(ApiEndpoint):
             termination_type (str, Optional): Termination type, default "others"
             termination_reason (str, Optional): Termination reason
         """
-        path = f"{_id}/deactivate"
+        path = f"/{_id}/deactivate"
 
         data = {
             "end_date": end_date.strftime(DATE_FORMAT),
