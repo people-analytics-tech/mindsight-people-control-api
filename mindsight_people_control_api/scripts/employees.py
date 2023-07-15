@@ -167,13 +167,13 @@ class Employees(ApiEndpoint):
             "email": email,
             "employee_code": employee_code,
             "start_date": start_date.strftime(DATE_FORMAT),
-            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}"),
+            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}") if area else area,
             "position": generate_url(
                 base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
-            ),
+            ) if position else position,
             "manager": generate_url(
                 base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager}"
-            ),
+            ) if manager else manager,
         }
 
         return self._base_requests.post(path=path, json=data)
