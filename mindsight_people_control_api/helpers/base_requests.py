@@ -16,6 +16,7 @@ class BaseRequests:
         self.__token = API_TOKEN
         self.headers = None
         self.base_path = "/"
+        self.timeout: int = TIMEOUT
 
     def __authorization_header(self) -> dict:
         return {
@@ -71,7 +72,7 @@ class BaseRequests:
                 headers=self.headers,
                 params=parameters,
                 data=data,
-                timeout=TIMEOUT,
+                timeout=self.timeout,
             )
 
         elif method == "post":
@@ -81,7 +82,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
-                timeout=TIMEOUT,
+                timeout=self.timeout,
             )
 
         elif method == "put":
@@ -91,7 +92,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
-                timeout=TIMEOUT,
+                timeout=self.timeout,
             )
 
         elif method == "patch":
@@ -101,7 +102,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
-                timeout=TIMEOUT,
+                timeout=self.timeout,
             )
 
         elif method == "delete":
@@ -111,7 +112,7 @@ class BaseRequests:
                 params=parameters,
                 data=data,
                 json=json,
-                timeout=TIMEOUT,
+                timeout=self.timeout,
             )
 
         # Check response

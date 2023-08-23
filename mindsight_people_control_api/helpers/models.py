@@ -3,15 +3,16 @@
 import requests
 
 from mindsight_people_control_api.helpers.base_requests import BaseRequests
-from mindsight_people_control_api.settings import PAGE_SIZE, TIMEOUT
+from mindsight_people_control_api.settings import PAGE_SIZE
+
+_base_requests: BaseRequests = BaseRequests()
 
 
 class ApiEndpoint:
     """This class represents a base api endpoint classes"""
 
-    _base_requests: BaseRequests = BaseRequests()
-
     def __init__(self, base_path: str) -> None:
+        self._base_requests: BaseRequests = _base_requests
         self._base_requests.base_path = base_path
         self._page_size: int = PAGE_SIZE
 
@@ -27,6 +28,19 @@ class ApiEndpoint:
             raise ValueError("Page size can be > 0.")
 
         self._page_size = value
+
+    @property
+    def timeout(self) -> int:
+        """Get timeout seconds."""
+        return self._base_requests.timeout
+
+    @timeout.setter
+    def timeout(self, value: int):
+        """Set timeout config to request."""
+        if value <= 0:
+            raise ValueError("Timeout can be > 0.")
+
+        self._base_requests.timeout = value
 
 
 class ApiPaginationResponse:
@@ -54,7 +68,7 @@ class ApiPaginationResponse:
             response = requests.get(
                 url=self.next,
                 headers=self.__headers,
-                timeout=TIMEOUT,
+                timeout=_base_requests.timeout,
             )
 
             response.raise_for_status()
