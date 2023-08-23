@@ -1,5 +1,7 @@
 """This module provide helpers classes to represent objects"""
 
+from time import sleep
+
 import requests
 
 from mindsight_people_control_api.helpers.base_requests import BaseRequests
@@ -80,16 +82,28 @@ class ApiPaginationResponse:
         self.__headers = headers
         self.timeout = Timeout.timeout
 
-    def get_all(self):
+    def get_all(self, retries: int = 5):
         """Get all pages of data"""
         if self.next:
-            response = requests.get(
-                url=self.next,
-                headers=self.__headers,
-                timeout=self.timeout,
-            )
+            try:
+                response = requests.get(
+                    url=self.next,
+                    headers=self.__headers,
+                    timeout=self.timeout,
+                )
 
-            response.raise_for_status()
+                response.raise_for_status()
+
+            except Exception as error:
+                if retries > 0:
+                    print(f"Error on try get {self.next}: {error}")
+                    print("Retry in 30s...")
+                    sleep(30)
+                    self.get_all(retries=retries - 1)
+
+                else:
+                    raise error
+
             response_data = response.json()
 
             self.results.extend(response_data["results"])
