@@ -3,16 +3,32 @@
 import requests
 
 from mindsight_people_control_api.helpers.base_requests import BaseRequests
-from mindsight_people_control_api.settings import PAGE_SIZE
+from mindsight_people_control_api.settings import PAGE_SIZE, TIMEOUT
 
-_base_requests: BaseRequests = BaseRequests()
+
+class Timeout(object):
+    """This class is aux to manage timeout between classes in module."""
+
+    _timeout: int = TIMEOUT
+
+    @property
+    @classmethod
+    def timeout(cls) -> int:
+        """Get timeout setted."""
+        return cls._timeout
+
+    @timeout.setter
+    @classmethod
+    def timeout(cls, value: int):
+        """Set timeout value."""
+        cls._timeout = value
 
 
 class ApiEndpoint:
     """This class represents a base api endpoint classes"""
 
     def __init__(self, base_path: str) -> None:
-        self._base_requests: BaseRequests = _base_requests
+        self._base_requests: BaseRequests = BaseRequests()
         self._base_requests.base_path = base_path
         self._page_size: int = PAGE_SIZE
 
@@ -41,6 +57,7 @@ class ApiEndpoint:
             raise ValueError("Timeout can be > 0.")
 
         self._base_requests.timeout = value
+        Timeout.timeout = value
 
 
 class ApiPaginationResponse:
@@ -61,6 +78,7 @@ class ApiPaginationResponse:
         self.previous = previous
         self.results.extend(results if results else [])
         self.__headers = headers
+        self.timeout = Timeout.timeout
 
     def get_all(self):
         """Get all pages of data"""
@@ -68,7 +86,7 @@ class ApiPaginationResponse:
             response = requests.get(
                 url=self.next,
                 headers=self.__headers,
-                timeout=_base_requests.timeout,
+                timeout=self.timeout,
             )
 
             response.raise_for_status()
