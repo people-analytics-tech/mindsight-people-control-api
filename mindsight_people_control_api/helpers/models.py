@@ -82,7 +82,7 @@ class ApiPaginationResponse:
         self.__headers = headers
         self.timeout = Timeout.timeout
 
-    def get_all(self, retries: int = 5):
+    def get_all(self, retries: int = 1):
         """Get all pages of data"""
         if self.next:
             try:
