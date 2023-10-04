@@ -4,7 +4,7 @@ from typing import Any, Literal
 
 import requests
 
-from mindsight_people_control_api.helpers.exceptions import BadRequestException
+from mindsight_people_control_api.helpers.exceptions import BadRequestException, ServerErrorException
 from mindsight_people_control_api.settings import API_TOKEN, TIMEOUT
 from mindsight_people_control_api.utils.aux_functions import generate_url
 
@@ -40,8 +40,11 @@ class BaseRequests:
 
         except requests.HTTPError as http_error:
 
-            if response.status_code == 400 or response.status_code == 500:
+            if response.status_code == 400:
                 raise BadRequestException(message=content_text) from http_error
+            
+            if response.status_code == 500:
+                raise ServerErrorException(message=content_text) from http_error
 
             raise requests.HTTPError(http_error) from http_error
 
