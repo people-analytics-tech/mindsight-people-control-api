@@ -40,7 +40,7 @@ class BaseRequests:
 
         except requests.HTTPError as http_error:
 
-            if response.status_code == 400:
+            if response.status_code == 400 or response.status_code == 500:
                 raise BadRequestException(message=content_text) from http_error
 
             raise requests.HTTPError(http_error) from http_error
@@ -117,7 +117,8 @@ class BaseRequests:
 
         # Check response
         self.__check_response(response)
-
+        if response.status_code == 204:
+            return response
         response_json = response.json()
 
         return response_json
@@ -157,6 +158,7 @@ class BaseRequests:
         headers: dict = None,
         parameters: dict = None,
         data: Any = None,
+        json: Any = None,
     ):
         """Use PUT method on Rest API"""
         return self.__request_helper(
@@ -165,6 +167,7 @@ class BaseRequests:
             headers=headers,
             parameters=parameters,
             data=data,
+            json=json,
         )
 
     def patch(
@@ -173,6 +176,7 @@ class BaseRequests:
         headers: dict = None,
         parameters: dict = None,
         data: Any = None,
+        json: Any = None,
     ):
         """Use PATCH method on Rest API"""
         return self.__request_helper(
@@ -180,7 +184,8 @@ class BaseRequests:
             method="patch",
             headers=headers,
             parameters=parameters,
-            data=self.__get_not_none_data_values(data),
+            data=self.__get_not_none_data_values(data) if data else None,
+            json=json,
         )
 
     def delete(
