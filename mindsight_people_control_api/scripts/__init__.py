@@ -11,3 +11,5 @@ from mindsight_people_control_api.scripts.parent_areas import ParentAreas
 from mindsight_people_control_api.scripts.positions import Positions
 from mindsight_people_control_api.scripts.position_records import PositionRecords
 from mindsight_people_control_api.scripts.users import Users
+from mindsight_people_control_api.scripts.corporations import Corporations
+from mindsight_people_control_api.scripts.branch_corporations import BranchCorporations

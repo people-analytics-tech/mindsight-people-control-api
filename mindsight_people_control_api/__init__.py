@@ -12,6 +12,8 @@ from mindsight_people_control_api.scripts import (
     PositionRecords,
     Positions,
     Users,
+    Corporations,
+    BranchCorporations,
 )
 
 __doc__ = """
