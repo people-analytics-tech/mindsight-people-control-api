@@ -12,6 +12,8 @@ from mindsight_people_control_api.settings import (
     API_ENDPOINT_EMPLOYEES,
     API_ENDPOINT_POSITIONS,
     DATE_FORMAT,
+    API_ENDPOINT_CORPORATIONS,
+    API_ENDPOINT_BRANCH_CORPORATIONS,
 )
 from mindsight_people_control_api.utils.aux_functions import generate_url
 
@@ -142,6 +144,15 @@ class Employees(ApiEndpoint):
         area: int = None,
         position: int = None,
         manager: int = None,
+        gender: str= None,
+        cpf: str= None,
+        birth_date: str= None,
+        company_referal: str= None,
+        work_type: str= None,
+        work_city: str= None,
+        systems_permissions: list = None,
+        corporation: int= None,
+        branch_corporation: int= None,
     ):
         """Create new employee
         Reference:
@@ -174,6 +185,19 @@ class Employees(ApiEndpoint):
             "manager": generate_url(
                 base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager}"
             ) if manager else manager,
+            "gender":gender,
+            "cpf":cpf,
+            "birth_date":birth_date,
+            "company_referal":company_referal,
+            "work_type":work_type,
+            "work_city":work_city,
+            "systems_permissions":systems_permissions,
+            "corporation":generate_url(
+                base_path=API_ENDPOINT_CORPORATIONS, path=f"/{corporation}"
+            ) if corporation else corporation,
+            "branch_corporation":generate_url(
+                base_path=API_ENDPOINT_BRANCH_CORPORATIONS, path=f"/{branch_corporation}"
+            ) if branch_corporation else branch_corporation,
         }
 
         return self._base_requests.post(path=path, json=data)
