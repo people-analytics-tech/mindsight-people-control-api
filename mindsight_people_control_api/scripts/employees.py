@@ -144,15 +144,15 @@ class Employees(ApiEndpoint):
         area: int = None,
         position: int = None,
         manager: int = None,
-        gender: str= None,
-        cpf: str= None,
-        birth_date: str= None,
-        company_referal: str= None,
-        work_type: str= None,
-        work_city: str= None,
+        gender: str = None,
+        cpf: str = None,
+        birth_date: str = None,
+        company_referal: str = None,
+        work_type: str = None,  # "hybrid" "inoffice" "remote" "unknown"
+        work_city: str = None,
         systems_permissions: list = None,
-        corporation: int= None,
-        branch_corporation: int= None,
+        corporation: int = None,
+        branch_corporation: int = None,
     ):
         """Create new employee
         Reference:
@@ -178,26 +178,37 @@ class Employees(ApiEndpoint):
             "email": email,
             "employee_code": employee_code,
             "start_date": start_date.strftime(DATE_FORMAT),
-            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}") if area else area,
+            "area": generate_url(base_path=API_ENDPOINT_AREAS, path=f"/{area}")
+            if area
+            else area,
             "position": generate_url(
                 base_path=API_ENDPOINT_POSITIONS, path=f"/{position}"
-            ) if position else position,
+            )
+            if position
+            else position,
             "manager": generate_url(
                 base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager}"
-            ) if manager else manager,
-            "gender":gender,
-            "cpf":cpf,
-            "birth_date":birth_date,
-            "company_referal":company_referal,
-            "work_type":work_type,
-            "work_city":work_city,
-            "systems_permissions":systems_permissions,
-            "corporation":generate_url(
+            )
+            if manager
+            else manager,
+            "gender": gender,
+            "cpf": cpf,
+            "birth_date": birth_date,
+            "company_referal": company_referal,
+            "work_type": work_type,
+            "work_city": work_city,
+            "systems_permissions": systems_permissions,
+            "corporation": generate_url(
                 base_path=API_ENDPOINT_CORPORATIONS, path=f"/{corporation}"
-            ) if corporation else corporation,
-            "branch_corporation":generate_url(
-                base_path=API_ENDPOINT_BRANCH_CORPORATIONS, path=f"/{branch_corporation}"
-            ) if branch_corporation else branch_corporation,
+            )
+            if corporation
+            else corporation,
+            "branch_corporation": generate_url(
+                base_path=API_ENDPOINT_BRANCH_CORPORATIONS,
+                path=f"/{branch_corporation}",
+            )
+            if branch_corporation
+            else branch_corporation,
         }
 
         return self._base_requests.post(path=path, json=data)
@@ -321,7 +332,7 @@ class Employees(ApiEndpoint):
 
         payload = {
             "manager": generate_url(
-                base_path=API_ENDPOINT_AREAS, path=f"/{manager_id}"
+                base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager_id}"
             ),
             "start_date": start_date.strftime(DATE_FORMAT),
             "review_access": review_access,
@@ -354,7 +365,7 @@ class Employees(ApiEndpoint):
 
         payload = {
             "position": generate_url(
-                base_path=API_ENDPOINT_AREAS, path=f"/{position_id}"
+                base_path=API_ENDPOINT_POSITIONS, path=f"/{position_id}"
             ),
             "start_date": start_date.strftime(DATE_FORMAT),
             "review_access": review_access,
