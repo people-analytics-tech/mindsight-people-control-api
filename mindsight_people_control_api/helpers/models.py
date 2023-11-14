@@ -80,7 +80,7 @@ class ApiPaginationResponse:
         self.previous = previous
         self.results.extend(results if results else [])
         self.__headers = headers
-        self.timeout = Timeout.timeout
+        self.timeout = Timeout.timeout if isinstance(Timeout.timeout, int) else Timeout._timeout
 
     def get_all(self, retries: int = 1):
         """Get all pages of data"""
@@ -91,7 +91,6 @@ class ApiPaginationResponse:
                     headers=self.__headers,
                     timeout=self.timeout,
                 )
-
                 response.raise_for_status()
 
             except Exception as error:
