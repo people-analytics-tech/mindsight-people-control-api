@@ -70,6 +70,7 @@ class BaseRequests:
         method = method.lower()
 
         if method == "get":
+            parameters["ordering"] = "id"
             response = requests.get(
                 url=request_url,
                 headers=self.headers,
