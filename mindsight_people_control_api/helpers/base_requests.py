@@ -6,7 +6,7 @@ import requests
 
 from mindsight_people_control_api.helpers.exceptions import BadRequestException, ServerErrorException
 from mindsight_people_control_api.settings import API_TOKEN, TIMEOUT
-from mindsight_people_control_api.utils.aux_functions import generate_url
+from mindsight_people_control_api.utils.aux_functions import generate_url, remove_none_fields
 
 
 class BaseRequests:
@@ -23,15 +23,6 @@ class BaseRequests:
             "Authorization": f"Token {self.__token}",
             "Content-Type": "application/json",
         }
-
-    @staticmethod
-    def __get_not_none_data_values(data: dict):
-        result = {}
-        for key, value in data.items():
-            if value is not None:
-                result[key] = value
-
-        return result
 
     def __check_response(self, response: requests.Response):
         content_text = response.text
@@ -188,8 +179,8 @@ class BaseRequests:
             method="patch",
             headers=headers,
             parameters=parameters,
-            data=self.__get_not_none_data_values(data) if data else None,
-            json=self.__get_not_none_data_values(json) if json else None,
+            data=remove_none_fields(data) if data else None,
+            json=remove_none_fields(json) if json else None,
         )
 
     def delete(

@@ -15,7 +15,7 @@ from mindsight_people_control_api.settings import (
     API_ENDPOINT_CORPORATIONS,
     API_ENDPOINT_BRANCH_CORPORATIONS,
 )
-from mindsight_people_control_api.utils.aux_functions import generate_url
+from mindsight_people_control_api.utils.aux_functions import generate_url, remove_none_fields
 
 
 class Employees(ApiEndpoint):
@@ -210,7 +210,7 @@ class Employees(ApiEndpoint):
             if branch_corporation
             else branch_corporation,
         }
-
+        data = remove_none_fields(data=data)
         return self._base_requests.post(path=path, json=data)
 
     def post_activate_employee(
