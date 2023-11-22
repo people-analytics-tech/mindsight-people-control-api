@@ -114,9 +114,9 @@ class Users(ApiEndpoint):
         email: str = None,
         first_name: str = None,
         last_name: str = None,
-        is_superuser: bool = False,
-        is_staff: bool = False,
-        is_active: bool = False,
+        is_superuser: bool = None,
+        is_staff: bool = None,
+        is_active: bool = None,
         last_login: datetime = None,
         date_joined: datetime = None,
     ) -> dict:
