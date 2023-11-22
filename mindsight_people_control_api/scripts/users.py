@@ -151,7 +151,7 @@ class Users(ApiEndpoint):
             if date_joined
             else None,
         }
-        return self._base_requests.patch(path=path, data=data)
+        return self._base_requests.patch(path=path, json=data)
 
     def put_full_update_user(
         self,

@@ -189,7 +189,7 @@ class BaseRequests:
             headers=headers,
             parameters=parameters,
             data=self.__get_not_none_data_values(data) if data else None,
-            json=json,
+            json=self.__get_not_none_data_values(json) if json else None,
         )
 
     def delete(
