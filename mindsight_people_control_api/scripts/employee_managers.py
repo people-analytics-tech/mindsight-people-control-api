@@ -30,7 +30,7 @@ class EmployeeManagers(ApiEndpoint):
         created__lt: datetime = None,
         modified__gt: datetime = None,
         modified__lt: datetime = None,
-        active: str = None,
+        active: bool = None,
         search: str = None,
     ) -> ApiPaginationResponse:
         """Get employees managers records data
@@ -48,22 +48,14 @@ class EmployeeManagers(ApiEndpoint):
                 Format "%Y-%m-%d %H:%M:%S"
             modified__lt (str, Optional): Datetime to apply filter "<=" on modified dates.
                 Format "%Y-%m-%d %H:%M:%S"
-            active (str, Optional): is_active: Flag to get managers by status
+            active (bool, Optional): is_active: Flag to get managers by status
             search: A search term.
         """
 
         path = ""
         parameters = {
-            "manager": (
-                generate_url(base_path=API_ENDPOINT_EMPLOYEES, path=f"/{manager_id}")
-                if manager_id
-                else None
-            ),
-            "employee": (
-                generate_url(base_path=API_ENDPOINT_EMPLOYEES, path=f"/{employee_id}")
-                if employee_id
-                else None
-            ),
+            "manager": manager_id,
+            "employee": employee_id,
             "created__gt": created__gt.strftime(DATETIME_FORMAT)
             if created__gt
             else None,
