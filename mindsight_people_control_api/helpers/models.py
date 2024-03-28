@@ -78,9 +78,11 @@ class ApiPaginationResponse:
         self.count = count
         self.next = kwargs.get("next")
         self.previous = previous
-        self.results.extend(results if results else [])
+        self.results = results if results else []
         self.__headers = headers
-        self.timeout = Timeout.timeout if isinstance(Timeout.timeout, int) else Timeout._timeout
+        self.timeout = (
+            Timeout.timeout if isinstance(Timeout.timeout, int) else Timeout._timeout
+        )
 
     def get_all(self, retries: int = 1):
         """Get all pages of data"""
